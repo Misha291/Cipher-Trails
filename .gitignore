@@ -1,0 +1,17 @@
+# Папки компиляции (мусор)
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Xx]64/
+[Xx]86/
+
+# Папки пользователя и настройки Windows
+.vs/
+*.user
+*.suo
+*.userosscache
+
+# MonoGame (игровые движки)
+Content/bin/
+Content/obj/
