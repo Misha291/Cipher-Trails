@@ -79,7 +79,13 @@ namespace MazeGame
 
             // TODO: Add your drawing code here
 
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(_playerTexture, _player.Position, Color.Red);
+            _spriteBatch.End();
+
             base.Draw(gameTime);
         }
     }
 }
+
+
