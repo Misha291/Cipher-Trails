@@ -9,6 +9,7 @@ namespace MazeGame
         private GraphicsDeviceManager _graphics; // объект который настраивает графику игры
         private SpriteBatch _spriteBatch; // рисует текстуры (картинки) - мы рисуем каждый кадр 
         private Player _player;
+        private Texture2D _playerTexture;
 
         public Game1()
         {
@@ -32,6 +33,16 @@ namespace MazeGame
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            _playerTexture = new Texture2D(GraphicsDevice, 32, 32);
+
+            Color[] data = new Color[32 * 32]; 
+            for (var i = 0; i < data.Length; i++)
+            {
+                data[i] = Color.White;
+            }
+            _playerTexture.SetData(data);
+
         }
 
         protected override void Update(GameTime gameTime)
