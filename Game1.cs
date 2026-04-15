@@ -55,19 +55,19 @@ namespace MazeGame
             var keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                _player.Position = new Vector2( _player.Position.X + 10, _player.Position.Y );
+                _player.Move(new Vector2(10, 0));
             }
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                _player.Position = new Vector2( _player.Position.X - 10, _player.Position.Y );
+                _player.Move(new Vector2(-10, 0));
             }
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                _player.Position = new Vector2(_player.Position.X, _player.Position.Y - 10);
+                _player.Move(new Vector2(0, -10));
             }
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                _player.Position = new Vector2( _player.Position.X, _player.Position.Y + 10 );
+                _player.Move(new Vector2(0, 10));
             }
 
             base.Update(gameTime);
