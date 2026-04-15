@@ -11,6 +11,11 @@ namespace MazeGame
 {
     public class Player
     {
-        public Vector2 Position; 
+        public Vector2 Position;
+
+        public void Move(Vector2 direction)
+        {
+            Position = Position + direction;
+        }
     }
 }
