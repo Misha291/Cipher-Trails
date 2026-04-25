@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Cipher_Trails;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -11,11 +12,19 @@ namespace MazeGame
         private Player _player;
         private Texture2D _playerTexture;
 
+        private Texture2D _wallTexture;
+
+        private Map _map;
+
+        private int _tileSize;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            _tileSize = 32;
         }
 
         protected override void Initialize()
@@ -24,6 +33,8 @@ namespace MazeGame
 
             _player = new Player();
             _player.Position = new Vector2(100, 100);
+
+            _map = new Map(10, 10);
 
             base.Initialize();
         }
@@ -35,14 +46,17 @@ namespace MazeGame
             // TODO: use this.Content to load your game content here
 
             _playerTexture = new Texture2D(GraphicsDevice, 32, 32);
+            _wallTexture = new Texture2D(GraphicsDevice, 32, 32);
 
             Color[] data = new Color[32 * 32]; 
             for (var i = 0; i < data.Length; i++)
             {
                 data[i] = Color.White;
             }
-            _playerTexture.SetData(data);
 
+
+            _playerTexture.SetData(data);
+            _wallTexture.SetData(data);
         }
 
         protected override void Update(GameTime gameTime)
@@ -80,8 +94,21 @@ namespace MazeGame
             // TODO: Add your drawing code here
 
             _spriteBatch.Begin();
+
+            for (int dy = 0; dy < _map.height; dy++)
+            {
+                for (int dx = 0; dx < _map.width; dx++)
+                {
+                    if (_map.map[dy, dx] == 1)
+                    {
+                        _spriteBatch.Draw(_wallTexture, new Vector2( dx * _tileSize, dy * _tileSize ), Color.Gray);
+                    }
+                }
+            }
+
             _spriteBatch.Draw(_playerTexture, _player.Position, Color.Red);
-            _spriteBatch.End();
+
+            _spriteBatch.End(); //пакетная отрисовка
 
             base.Draw(gameTime);
         }
