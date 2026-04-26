@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Data;
+using System.Reflection.Metadata.Ecma335;
 
 namespace MazeGame
 {
@@ -69,19 +71,22 @@ namespace MazeGame
             var keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.D))
             {
-                _player.Move(new Vector2(10, 0));
+                CanMoveTo(new Vector2(10, 0));
             }
+
             if (keyboardState.IsKeyDown(Keys.A))
             {
-                _player.Move(new Vector2(-10, 0));
+                CanMoveTo(new Vector2(-10, 0));
             }
+
             if (keyboardState.IsKeyDown(Keys.W))
             {
-                _player.Move(new Vector2(0, -10));
+                CanMoveTo(new Vector2(0, -10));
             }
+
             if (keyboardState.IsKeyDown(Keys.S))
             {
-                _player.Move(new Vector2(0, 10));
+                CanMoveTo(new Vector2(0, 10));
             }
 
             base.Update(gameTime);
@@ -112,6 +117,96 @@ namespace MazeGame
 
             base.Draw(gameTime);
         }
+
+        protected void CanMoveTo(Vector2 direction)
+        {
+            var nextPosition = _player.Position + direction;
+
+            var checkX = nextPosition.X;
+            var checkY = nextPosition.Y;
+            
+            if (direction.X > 0)
+            {
+                var okTopRight = IsCellFree(checkX + _tileSize, checkY);
+                if (okTopRight == false)
+                {
+                    return;
+                }
+                
+                var okDownRight = IsCellFree(checkX + _tileSize, checkY + _tileSize);
+                if (okDownRight == false)
+                {
+                    return;
+                }
+
+                _player.Move(direction);
+            }
+
+            if (direction.Y > 0)
+            {
+                var okDownLeft = IsCellFree(checkX, checkY + _tileSize);
+                if (okDownLeft == false)
+                {
+                    return;
+                }
+
+                var okDownRight = IsCellFree(checkX + _tileSize, checkY + _tileSize);
+                if (okDownRight == false)
+                {
+                    return;
+                }
+
+                _player.Move(direction);
+            }
+
+            if (direction.X < 0)
+            {
+                var okTopLeft = IsCellFree(checkX, checkY);
+                if (okTopLeft == false)
+                {
+                    return;
+                }
+
+                var okDownLeft = IsCellFree(checkX, checkY + _tileSize);
+                if (okDownLeft == false)
+                {
+                    return;
+                }
+
+                _player.Move(direction);
+            }
+
+            if (direction.Y < 0)
+            {
+                var okTopLeft = IsCellFree(checkX, checkY);
+                if (okTopLeft == false)
+                {
+                    return;
+                }
+
+                var okTopRight = IsCellFree(checkX + _tileSize, checkY);
+                if (okTopRight == false)
+                {
+                    return;
+                }
+
+                _player.Move(direction);
+            }
+        }
+
+        protected bool IsCellFree(float checkX, float checkY) //метод проверки стена или нет 
+        {
+            int nextX = (int)(checkX / _tileSize);
+            int nextY = (int)(checkY / _tileSize);
+            if (nextX >= 0 && nextY >= 0
+                && nextX <= _map.width - 1 && nextY <= _map.height - 1
+                && _map.map[nextY, nextX] == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+
     }
 }
 
