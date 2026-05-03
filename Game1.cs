@@ -13,15 +13,12 @@ namespace MazeGame
         private GraphicsDeviceManager _graphics; // объект который настраивает графику игры
         private SpriteBatch _spriteBatch; // рисует текстуры (картинки) - мы рисуем каждый кадр 
         private Player _player;
-        private Texture2D _playerTexture;
-
-        private Texture2D _wallTexture;
-
-        private Texture2D _exitTexture;
-
-        private bool _flagWin = false;
-
         private Map _map;
+        private Win _win;
+
+        private Texture2D _playerTexture;
+        private Texture2D _wallTexture;
+        private Texture2D _exitTexture;
 
         private int _tileSize;
 
@@ -43,6 +40,7 @@ namespace MazeGame
             _player.Position = new Vector2(100, 100);
 
             _map = new Map(10, 10);
+            _win = new Win(32, 8, 8, 7f);
 
             base.Initialize();
         }
@@ -77,8 +75,9 @@ namespace MazeGame
 
             var keyboardState = Keyboard.GetState();
 
-            if (_flagWin)
+            if (_win.IsWin)
             {
+                Window.Title = "ПОБЕДА !";
                 if (keyboardState.IsKeyDown(Keys.Escape))
                 {
                     Exit();
@@ -106,7 +105,7 @@ namespace MazeGame
                 CanMoveTo(new Vector2(0, 10));
             }
 
-            CheckWin();
+            _win.Check(_player.Position);
             base.Update(gameTime);
         }
 
@@ -217,7 +216,7 @@ namespace MazeGame
             return false;
         }
 
-        protected bool TwoCelisFree(float x1, float y1, float x2, float y2)
+        protected bool TwoCelisFree(float x1, float y1, float x2, float y2) //метод проверки двух крайних точек игрока 
         {
             if (!IsCellFree(x1, y1))
             {
@@ -228,29 +227,6 @@ namespace MazeGame
                 return false;
             }
             return true;
-        }
-
-        public void CheckWin()
-        {
-            if (_flagWin)
-            {
-                return;
-            }
-            float _exitX = (_tileSize * 8) + _tileSize / 2f;
-            float _exitY = (_tileSize * 8) + _tileSize / 2f;
-
-            float _playerCenterX = _player.Position.X + _tileSize / 2f;
-            float _playerCenterY = _player.Position.Y + _tileSize / 2f;
-
-            Vector2 _exitPosition = new Vector2(_exitX, _exitY);
-            Vector2 _playerCenter = new Vector2(_playerCenterX, _playerCenterY);
-
-            if ((Math.Abs(_playerCenter.X - _exitPosition.X) <= 7) 
-                && (Math.Abs(_playerCenter.Y - _exitPosition.Y) <= 7))
-            {
-                _flagWin = true;
-                Window.Title = "ПОБЕДА, ВЫ ВЫШЛИ ИЗ ЛАБИРИНТА !";
-            }
         }
     }
 }
