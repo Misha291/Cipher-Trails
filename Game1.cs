@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 using System.Data;
 using System.Reflection.Metadata.Ecma335;
 
@@ -16,9 +17,14 @@ namespace MazeGame
 
         private Texture2D _wallTexture;
 
+        private Texture2D _exitTexture;
+
+        private bool _flagWin = false;
+
         private Map _map;
 
         private int _tileSize;
+
 
         public Game1()
         {
@@ -49,6 +55,7 @@ namespace MazeGame
 
             _playerTexture = new Texture2D(GraphicsDevice, 32, 32);
             _wallTexture = new Texture2D(GraphicsDevice, 32, 32);
+            _exitTexture = new Texture2D (GraphicsDevice, 32, 32);
 
             Color[] data = new Color[32 * 32]; 
             for (var i = 0; i < data.Length; i++)
@@ -56,9 +63,9 @@ namespace MazeGame
                 data[i] = Color.White;
             }
 
-
             _playerTexture.SetData(data);
             _wallTexture.SetData(data);
+            _exitTexture.SetData(data);
         }
 
         protected override void Update(GameTime gameTime)
@@ -69,6 +76,16 @@ namespace MazeGame
             // TODO: Add your update logic here
 
             var keyboardState = Keyboard.GetState();
+
+            if (_flagWin)
+            {
+                if (keyboardState.IsKeyDown(Keys.Escape))
+                {
+                    Exit();
+                }
+                return;
+            }
+
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 CanMoveTo(new Vector2(10, 0));
@@ -89,6 +106,7 @@ namespace MazeGame
                 CanMoveTo(new Vector2(0, 10));
             }
 
+            CheckWin();
             base.Update(gameTime);
         }
 
@@ -112,7 +130,7 @@ namespace MazeGame
             }
 
             _spriteBatch.Draw(_playerTexture, _player.Position, Color.Red);
-
+            _spriteBatch.Draw(_exitTexture, new Vector2(_tileSize * 8, _tileSize * 8), Color.Green);
             _spriteBatch.End(); //пакетная отрисовка
 
             base.Draw(gameTime);
@@ -124,72 +142,64 @@ namespace MazeGame
 
             var checkX = nextPosition.X;
             var checkY = nextPosition.Y;
-            
+
             if (direction.X > 0)
             {
-                var okTopRight = IsCellFree(checkX + _tileSize, checkY);
-                if (okTopRight == false)
-                {
-                    return;
-                }
-                
-                var okDownRight = IsCellFree(checkX + _tileSize, checkY + _tileSize);
-                if (okDownRight == false)
-                {
-                    return;
-                }
+                //вправо
+                var xRtopR = checkX + _tileSize;
+                var yRtopR = checkY;
+                var xRdownR = checkX;
+                var yRdownR = checkY + _tileSize;
 
+                if (!TwoCelisFree(xRtopR, yRtopR, xRdownR, yRdownR))
+                {
+                    return;
+                }
                 _player.Move(direction);
             }
 
             if (direction.Y > 0)
             {
-                var okDownLeft = IsCellFree(checkX, checkY + _tileSize);
-                if (okDownLeft == false)
+                //вниз
+                var xRdownD = checkX;
+                var yRdownD = checkY + _tileSize;
+                var xLdownD = checkX;
+                var yLdownD = checkY + _tileSize;
+
+                if (!TwoCelisFree(xRdownD, yRdownD, xLdownD, yLdownD))
                 {
                     return;
                 }
-
-                var okDownRight = IsCellFree(checkX + _tileSize, checkY + _tileSize);
-                if (okDownRight == false)
-                {
-                    return;
-                }
-
                 _player.Move(direction);
             }
 
             if (direction.X < 0)
             {
-                var okTopLeft = IsCellFree(checkX, checkY);
-                if (okTopLeft == false)
+                //влево
+                var xLtopL = checkX;
+                var yLtopL = checkY;
+                var xLdownL = checkX;
+                var yLdownL = checkY + _tileSize;
+
+                if (!TwoCelisFree(xLtopL, yLtopL, xLdownL, yLdownL))
                 {
                     return;
                 }
-
-                var okDownLeft = IsCellFree(checkX, checkY + _tileSize);
-                if (okDownLeft == false)
-                {
-                    return;
-                }
-
                 _player.Move(direction);
             }
 
             if (direction.Y < 0)
             {
-                var okTopLeft = IsCellFree(checkX, checkY);
-                if (okTopLeft == false)
+                //вверх
+                var xLtopT = checkX;
+                var yLtopT = checkY;
+                var xRtopT = checkX + _tileSize;
+                var yRtopT = checkY;
+
+                if (!TwoCelisFree(xLtopT, yLtopT, xRtopT, yRtopT))
                 {
                     return;
                 }
-
-                var okTopRight = IsCellFree(checkX + _tileSize, checkY);
-                if (okTopRight == false)
-                {
-                    return;
-                }
-
                 _player.Move(direction);
             }
         }
@@ -207,6 +217,41 @@ namespace MazeGame
             return false;
         }
 
+        protected bool TwoCelisFree(float x1, float y1, float x2, float y2)
+        {
+            if (!IsCellFree(x1, y1))
+            {
+                return false;
+            }
+            if (!IsCellFree(x2, y2))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void CheckWin()
+        {
+            if (_flagWin)
+            {
+                return;
+            }
+            float _exitX = (_tileSize * 8) + _tileSize / 2f;
+            float _exitY = (_tileSize * 8) + _tileSize / 2f;
+
+            float _playerCenterX = _player.Position.X + _tileSize / 2f;
+            float _playerCenterY = _player.Position.Y + _tileSize / 2f;
+
+            Vector2 _exitPosition = new Vector2(_exitX, _exitY);
+            Vector2 _playerCenter = new Vector2(_playerCenterX, _playerCenterY);
+
+            if ((Math.Abs(_playerCenter.X - _exitPosition.X) <= 7) 
+                && (Math.Abs(_playerCenter.Y - _exitPosition.Y) <= 7))
+            {
+                _flagWin = true;
+                Window.Title = "ПОБЕДА, ВЫ ВЫШЛИ ИЗ ЛАБИРИНТА !";
+            }
+        }
     }
 }
 
