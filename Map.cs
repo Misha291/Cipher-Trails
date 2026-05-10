@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Cipher_Trails
 {
-    class Map
+    public class Map
     {
         public int[,] map;
         public int height;
