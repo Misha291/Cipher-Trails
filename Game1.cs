@@ -13,8 +13,7 @@ namespace MazeGame
         private GraphicsDeviceManager _graphics; // объект который настраивает графику игры
         private SpriteBatch _spriteBatch; // рисует текстуры (картинки) - мы рисуем каждый кадр 
         private Player _player;
-        private Map _map;
-        private Win _win;
+        private Level _level;
 
         private GameController _gameController;
         private GameView _gameView;
@@ -22,6 +21,9 @@ namespace MazeGame
         private Texture2D _playerTexture;
         private Texture2D _wallTexture;
         private Texture2D _exitTexture;
+
+        private Level[] _levels;
+        private int _currentLevel = 0;
 
         private int _tileSize;
 
@@ -39,14 +41,19 @@ namespace MazeGame
         {
             // TODO: Add your initialization logic here
 
+            _levels = new Level[3];
+
+            _levels[0] = new Level(10, 10, 32, 7, 7, 8f, new Vector2(100, 100));
+            _levels[1] = new Level(12, 12, 32, 9, 9, 8f, new Vector2(100, 100));
+            _levels[2] = new Level(14, 14, 32, 11, 11, 8f, new Vector2(100, 100));
+
+            _level = _levels[_currentLevel];
+
             _player = new Player();
-            _player.Position = new Vector2(100, 100);
+            _player.Position = _level.StartPosition;
 
-            _map = new Map(10, 10);
-            _win = new Win(32, 8, 8, 7f);
+            _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize);
 
-            _gameController = new GameController(_player, _map, _win, _tileSize);
-            _gameView = new GameView(_player, _map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture);
             base.Initialize();
         }
 
@@ -69,6 +76,9 @@ namespace MazeGame
             _playerTexture.SetData(data);
             _wallTexture.SetData(data);
             _exitTexture.SetData(data);
+
+            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture);
+            LoadLevel(_currentLevel);
         }
 
         protected override void Update(GameTime gameTime)
@@ -82,14 +92,21 @@ namespace MazeGame
 
             _gameController.Update(keyboardState);
 
-            if (_win.IsWin)
+            if (_level.Win.IsWin)
             {
-                Window.Title = "ПОБЕДА !";
-                if (keyboardState.IsKeyDown(Keys.Escape))
+                if (_currentLevel < _levels.Length - 1)
                 {
-                    Exit();
+                    _currentLevel++;
+                    LoadLevel(_currentLevel);
                 }
-                return;
+                else
+                {
+                    Window.Title = "Все уровни пройдены !";
+                    if (keyboardState.IsKeyDown(Keys.Escape))
+                    {
+                        Exit();
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -104,6 +121,16 @@ namespace MazeGame
             _gameView.Draw();
 
             base.Draw(gameTime);
+        }
+
+        public void LoadLevel(int index)
+        {
+            _level = _levels[index];
+            _player.Position = _level.StartPosition;
+
+            _gameController.UpdateLevelController(_level);
+            _gameView.UpdateLevelView(_level);
+
         }
     }
 }

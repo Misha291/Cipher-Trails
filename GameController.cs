@@ -26,6 +26,11 @@ namespace Cipher_Trails
 
         public void Update(KeyboardState keyboardState)
         {
+            if (_win.IsWin)
+            {
+                return;
+            }
+
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 CanMoveTo(new Vector2(10, 0));
@@ -142,6 +147,12 @@ namespace Cipher_Trails
                 return false;
             }
             return true;
+        }
+
+        public void UpdateLevelController(Level level)
+        {
+            _map = level.Map;
+            _win = level.Win;
         }
 
     }

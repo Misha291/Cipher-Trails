@@ -13,6 +13,8 @@ namespace Cipher_Trails
     {
         private Player _player;
         private Map _map;
+        private Vector2 _exitPosition;
+
         private SpriteBatch _spriteBatch;
 
         private Texture2D _playerTexture;
@@ -32,6 +34,12 @@ namespace Cipher_Trails
             _exitTexture = exitTexture;
         }
 
+        public void UpdateLevelView(Level level)
+        {
+            _map = level.Map;
+            _exitPosition = level.Win.ExitPosition - new Vector2(_tileSize / 2f, _tileSize / 2f);
+        }
+
         public void Draw()
         {
             _spriteBatch.Begin();
@@ -48,7 +56,7 @@ namespace Cipher_Trails
             }
 
             _spriteBatch.Draw(_playerTexture, _player.Position, Color.Red);
-            _spriteBatch.Draw(_exitTexture, new Vector2(_tileSize * 8, _tileSize * 8), Color.Green);
+            _spriteBatch.Draw(_exitTexture, _exitPosition, Color.Green);
             _spriteBatch.End(); //пакетная отрисовка
         }
     }

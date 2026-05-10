@@ -16,6 +16,7 @@ namespace Cipher_Trails
         private Vector2 _exitPosition;
         private float _winRadius;
         public bool IsWin { get { return _flagWin; } }
+        public Vector2 ExitPosition { get { return _exitPosition; } }
         public Win(int tileSize, int exitPointX, int exitPointY, float winRadius)
         {
             _tileSize = tileSize;
