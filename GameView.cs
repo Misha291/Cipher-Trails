@@ -55,8 +55,8 @@ namespace Cipher_Trails
                 }
             }
 
-            _spriteBatch.Draw(_playerTexture, _player.Position, Color.Red);
-            _spriteBatch.Draw(_exitTexture, _exitPosition, Color.Green);
+            _spriteBatch.Draw(_playerTexture, _player.Position, Color.White);
+            _spriteBatch.Draw(_exitTexture, _exitPosition, Color.White);
             _spriteBatch.End(); //пакетная отрисовка
         }
     }

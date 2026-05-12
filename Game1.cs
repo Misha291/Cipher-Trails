@@ -31,6 +31,10 @@ namespace MazeGame
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            _graphics.PreferredBackBufferWidth = 2600;
+            _graphics.PreferredBackBufferHeight = 1500;
+            _graphics.ApplyChanges();
+
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
@@ -43,9 +47,9 @@ namespace MazeGame
 
             _levels = new Level[3];
 
-            _levels[0] = new Level(10, 10, 32, 7, 7, 8f, new Vector2(100, 100));
-            _levels[1] = new Level(12, 12, 32, 9, 9, 8f, new Vector2(100, 100));
-            _levels[2] = new Level(14, 14, 32, 11, 11, 8f, new Vector2(100, 100));
+            _levels[0] = new Level(10, 10, 32, 7, 7, 19f, new Vector2(100, 100));
+            _levels[1] = new Level(12, 12, 32, 9, 9, 19f, new Vector2(100, 100));
+            _levels[2] = new Level(14, 14, 32, 11, 11, 19f, new Vector2(100, 100));
 
             _level = _levels[_currentLevel];
 
@@ -63,19 +67,16 @@ namespace MazeGame
 
             // TODO: use this.Content to load your game content here
 
-            _playerTexture = new Texture2D(GraphicsDevice, 32, 32);
-            _wallTexture = new Texture2D(GraphicsDevice, 32, 32);
-            _exitTexture = new Texture2D (GraphicsDevice, 32, 32);
+            _playerTexture = Content.Load<Texture2D>("player");
+            _wallTexture = Content.Load<Texture2D>("wall");
+            _exitTexture = Content.Load<Texture2D>("exit");
 
-            Color[] data = new Color[32 * 32]; 
+            Color[] data = new Color[32 * 32];
             for (var i = 0; i < data.Length; i++)
             {
                 data[i] = Color.White;
             }
-
-            _playerTexture.SetData(data);
-            _wallTexture.SetData(data);
-            _exitTexture.SetData(data);
+            
 
             _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture);
             LoadLevel(_currentLevel);
