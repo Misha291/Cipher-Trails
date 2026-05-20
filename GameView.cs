@@ -14,16 +14,18 @@ namespace Cipher_Trails
         private Player _player;
         private Map _map;
         private Vector2 _exitPosition;
+        private CoinManager _coinManeger;
 
         private SpriteBatch _spriteBatch;
 
         private Texture2D _playerTexture;
         private Texture2D _wallTexture;
         private Texture2D _exitTexture;
+        private Texture2D _coinTexture;
 
         private int _tileSize;
 
-        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture)
+        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture)
         {
             _player = player;  
             _map = map;
@@ -32,13 +34,17 @@ namespace Cipher_Trails
             _playerTexture = playerTexture;
             _wallTexture = wallTexture;
             _exitTexture = exitTexture;
+            _coinTexture = coinTexture;
         }
 
         public void UpdateLevelView(Level level)
         {
             _map = level.Map;
             _exitPosition = level.Win.ExitPosition - new Vector2(_tileSize / 2f, _tileSize / 2f);
+            _coinManeger = level.CoinManager;
         }
+
+
 
         public void Draw()
         {
@@ -55,6 +61,15 @@ namespace Cipher_Trails
                 }
             }
 
+            foreach (Coin coin in _coinManeger.CoinsList)
+            {
+                if (!coin.IsCollected)
+                {
+                    _spriteBatch.Draw(_coinTexture, coin.Position, Color.White);
+                }
+            }
+
+            
             _spriteBatch.Draw(_playerTexture, _player.Position, Color.White);
             _spriteBatch.Draw(_exitTexture, _exitPosition, Color.White);
             _spriteBatch.End(); //пакетная отрисовка

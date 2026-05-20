@@ -14,23 +14,21 @@ namespace Cipher_Trails
         private Player _player;
         private Map _map;
         private Win _win;
+        private CoinManager _coinMnager;
+
         private int _tileSize;
 
-        public GameController(Player player, Map map, Win win, int tileSize)
+        public GameController(Player player, Map map, Win win, int tileSize, CoinManager coinManager)
         {
             _player = player;
             _map = map;
             _win = win;
+            _coinMnager = coinManager;
             _tileSize = tileSize;
         }
 
         public void Update(KeyboardState keyboardState)
         {
-            if (_win.IsWin)
-            {
-                return;
-            }
-
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 CanMoveTo(new Vector2(10, 0));
@@ -51,7 +49,14 @@ namespace Cipher_Trails
                 CanMoveTo(new Vector2(0, 10));
             }
 
+            _coinMnager.CheckCollisionsCoins(_player.Position);
+
             _win.Check(_player.Position);
+
+            if (_win.IsWin && _coinMnager.AllCollected())
+            {
+                return;
+            }
         }
 
         protected void CanMoveTo(Vector2 direction)
@@ -153,6 +158,7 @@ namespace Cipher_Trails
         {
             _map = level.Map;
             _win = level.Win;
+            _coinMnager = level.CoinManager;
         }
 
     }
