@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 
-namespace Cipher_Trails
+namespace Cipher_Trails.Models
 {
     public class CoinManager
     {
