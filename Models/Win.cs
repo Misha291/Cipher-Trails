@@ -11,11 +11,11 @@ namespace Cipher_Trails
 {
     public class Win
     {
-        private bool _flagWin = false;
+        
         private int _tileSize;
         private Vector2 _exitPosition;
         private float _winRadius;
-        public bool IsWin { get { return _flagWin; } }
+        
         public Vector2 ExitPosition { get { return _exitPosition; } }
         public Win(int tileSize, int exitPointX, int exitPointY, float winRadius)
         {
@@ -25,23 +25,19 @@ namespace Cipher_Trails
                                         _tileSize * exitPointY + _tileSize / 2f);
         }
 
-        public void Check(Vector2 playerPosition) //проверка дошли ли мы до точки победы
+        public bool IsPlayerOnExit(Vector2 playerPosition)
         {
-            if (_flagWin) //проверка не стоим ли мы изначально в точке победы
-            {
-                return;
-            }
+            float playerCenterX = playerPosition.X + _tileSize / 2;
+            float playerCenterY = playerPosition.Y + _tileSize / 2;
+            var playerCenter = new Vector2(playerCenterX, playerCenterY);
 
-            float playerCenterX = playerPosition.X + _tileSize / 2f;
-            float playerCenterY = playerPosition.Y + _tileSize / 2f;
-            Vector2 playerCenter = new Vector2(playerCenterX, playerCenterY);
-
-            if ((Math.Abs(playerCenter.X - _exitPosition.X) <= _winRadius)
-                && (Math.Abs(playerCenter.Y - _exitPosition.Y) <= _winRadius))
+            if (Vector2.Distance(playerCenter, _exitPosition) < _winRadius)
             {
-                _flagWin = true;
+                return true;
             }
+            return false;
         }
+        
     }
 }
 

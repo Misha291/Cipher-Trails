@@ -1,4 +1,6 @@
-﻿using Cipher_Trails;
+﻿using Cipher_Trails.Controllers;
+using Cipher_Trails.Models;
+using Cipher_Trails.Views;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -105,7 +107,7 @@ namespace MazeGame
 
             _gameController.Update(keyboardState);
 
-            if (_level.Win.IsWin && _coinManager.AllCollected())
+            if (_level.Win.IsPlayerOnExit(_player.Position) && _coinManager.AllCollected())
             {
                 if (_currentLevel < _levels.Length - 1)
                 {
@@ -140,6 +142,7 @@ namespace MazeGame
         {
             _level = _levels[index];
             _player.Position = _level.StartPosition;
+            _coinManager = _level.CoinManager;
 
             _gameController.UpdateLevelController(_level);
             _gameView.UpdateLevelView(_level);

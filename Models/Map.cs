@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Cipher_Trails
+namespace Cipher_Trails.Models
 {
     public class Map
     {

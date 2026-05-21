@@ -1,13 +1,13 @@
-﻿using MazeGame;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Cipher_Trails.Models;
 
-namespace Cipher_Trails
+namespace Cipher_Trails.Controllers
 {
     public class GameController
     {
@@ -51,9 +51,9 @@ namespace Cipher_Trails
 
             _coinMnager.CheckCollisionsCoins(_player.Position);
 
-            _win.Check(_player.Position);
+            
 
-            if (_win.IsWin && _coinMnager.AllCollected())
+            if (_win.IsPlayerOnExit(_player.Position) && _coinMnager.AllCollected())
             {
                 return;
             }

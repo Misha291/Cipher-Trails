@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MazeGame
+namespace Cipher_Trails.Models
 {
     public class Player
     {
