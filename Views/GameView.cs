@@ -21,11 +21,12 @@ namespace Cipher_Trails.Views
         private Texture2D _playerTexture;
         private Texture2D _wallTexture;
         private Texture2D _exitTexture;
+        private Texture2D _backgroundTexture;
         private Texture2D _coinTexture;
 
         private int _tileSize;
 
-        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture)
+        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture, Texture2D backgroundTexture)
         {
             _player = player;  
             _map = map;
@@ -34,6 +35,7 @@ namespace Cipher_Trails.Views
             _playerTexture = playerTexture;
             _wallTexture = wallTexture;
             _exitTexture = exitTexture;
+            _backgroundTexture = backgroundTexture;
             _coinTexture = coinTexture;
         }
 
@@ -49,6 +51,9 @@ namespace Cipher_Trails.Views
         public void Draw()
         {
             _spriteBatch.Begin();
+
+            Rectangle backgroundSize = new Rectangle(0, 0, _map.width * _tileSize, _map.height * _tileSize);
+            _spriteBatch.Draw(_backgroundTexture, backgroundSize, Color.White);
 
             for (int dy = 0; dy < _map.height; dy++)
             {

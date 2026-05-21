@@ -24,6 +24,7 @@ namespace MazeGame
         private Texture2D _playerTexture;
         private Texture2D _wallTexture;
         private Texture2D _exitTexture;
+        private Texture2D _backgroundTexture;
         private Texture2D _coinTexture;
 
         private Level[] _levels;
@@ -75,6 +76,8 @@ namespace MazeGame
             _playerTexture = Content.Load<Texture2D>("player");
             _wallTexture = Content.Load<Texture2D>("wall");
             _exitTexture = Content.Load<Texture2D>("exit");
+            _backgroundTexture = Content.Load<Texture2D>("background");
+            _coinTexture = Content.Load<Texture2D>("coin");
             
 
             Color[] data = new Color[32 * 32];
@@ -83,16 +86,10 @@ namespace MazeGame
                 data[i] = Color.White;
             }
 
-            _coinTexture = new Texture2D(GraphicsDevice, 32, 32);
-            Color[] coinData = new Color[32 * 32];
-            for (int i = 0; i < coinData.Length; i++)
-            {
-                coinData[i] = Color.Yellow;
-            }
-            _coinTexture.SetData(coinData);
+            
 
 
-            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture);
+            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _backgroundTexture);
             LoadLevel(_currentLevel);
         }
 
