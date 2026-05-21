@@ -29,6 +29,11 @@ namespace Cipher_Trails.Controllers
 
         public void Update(KeyboardState keyboardState)
         {
+            if (_win.IsPlayerOnExit(_player.Position) && _coinMnager.AllCollected())
+            {
+                return;
+            }
+
             if (keyboardState.IsKeyDown(Keys.D))
             {
                 CanMoveTo(new Vector2(10, 0));
@@ -50,13 +55,6 @@ namespace Cipher_Trails.Controllers
             }
 
             _coinMnager.CheckCollisionsCoins(_player.Position);
-
-            
-
-            if (_win.IsPlayerOnExit(_player.Position) && _coinMnager.AllCollected())
-            {
-                return;
-            }
         }
 
         protected void CanMoveTo(Vector2 direction)
