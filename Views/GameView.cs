@@ -56,7 +56,7 @@ namespace Cipher_Trails.Views
         {
             _spriteBatch.Begin();
 
-            Rectangle backgroundSize = new Rectangle((int)(-_camera.CameraPosition.X), (int)(-_camera.CameraPosition.YЁ), _map.width * _tileSize, _map.height * _tileSize);
+            Rectangle backgroundSize = new Rectangle((int)(-_camera.CameraPosition.X), (int)(-_camera.CameraPosition.Y), _map.width * _tileSize, _map.height * _tileSize);
             _spriteBatch.Draw(_backgroundTexture, backgroundSize, Color.White);
 
             for (int dy = 0; dy < _map.height; dy++)
