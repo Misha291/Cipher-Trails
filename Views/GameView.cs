@@ -26,7 +26,9 @@ namespace Cipher_Trails.Views
 
         private int _tileSize;
 
-        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture, Texture2D backgroundTexture)
+        private Camera _camera;
+
+        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture, Texture2D backgroundTexture, Camera camera)
         {
             _player = player;  
             _map = map;
@@ -37,6 +39,8 @@ namespace Cipher_Trails.Views
             _exitTexture = exitTexture;
             _backgroundTexture = backgroundTexture;
             _coinTexture = coinTexture;
+            _camera = camera;
+            
         }
 
         public void UpdateLevelView(Level level)
@@ -52,7 +56,7 @@ namespace Cipher_Trails.Views
         {
             _spriteBatch.Begin();
 
-            Rectangle backgroundSize = new Rectangle(0, 0, _map.width * _tileSize, _map.height * _tileSize);
+            Rectangle backgroundSize = new Rectangle((int)(-_camera.CameraPosition.X), (int)(-_camera.CameraPosition.Y), _map.width * _tileSize, _map.height * _tileSize);
             _spriteBatch.Draw(_backgroundTexture, backgroundSize, Color.White);
 
             for (int dy = 0; dy < _map.height; dy++)
@@ -61,7 +65,8 @@ namespace Cipher_Trails.Views
                 {
                     if (_map.map[dy, dx] == 1)
                     {
-                        _spriteBatch.Draw(_wallTexture, new Vector2(dx * _tileSize, dy * _tileSize), Color.Gray);
+                        Vector2 wallPos = new Vector2(dx * _tileSize, dy * _tileSize);
+                        _spriteBatch.Draw(_wallTexture, wallPos - _camera.CameraPosition, Color.Gray); ;
                     }
                 }
             }
@@ -70,14 +75,14 @@ namespace Cipher_Trails.Views
             {
                 if (!coin.IsCollected)
                 {
-                    _spriteBatch.Draw(_coinTexture, coin.Position, Color.White);
+                    _spriteBatch.Draw(_coinTexture, coin.Position - _camera.CameraPosition, Color.White);
                 }
             }
 
             
-            _spriteBatch.Draw(_playerTexture, _player.Position, Color.White);
-            _spriteBatch.Draw(_exitTexture, _exitPosition, Color.White);
-            _spriteBatch.End(); //пакетная отрисовка
+            _spriteBatch.Draw(_playerTexture, _player.Position - _camera.CameraPosition, Color.White);
+            _spriteBatch.Draw(_exitTexture, _exitPosition - _camera.CameraPosition, Color.White);
+            _spriteBatch.End(); 
         }
     }
 }

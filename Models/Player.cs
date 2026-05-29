@@ -13,6 +13,10 @@ namespace Cipher_Trails.Models
     {
         public Vector2 Position;
 
+        public Player(Vector2 startPosition)
+        {
+            Position = startPosition;
+        }
         public void Move(Vector2 direction)
         {
             Position = Position + direction;

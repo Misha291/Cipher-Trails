@@ -27,11 +27,11 @@ namespace MazeGame
         private Texture2D _backgroundTexture;
         private Texture2D _coinTexture;
 
-        private Level[] _levels;
-        private int _currentLevel = 0;
+        private LevelManager _levelManager;
+
+        private Camera _camera;
 
         private int _tileSize;
-
 
         public Game1()
         {
@@ -49,17 +49,12 @@ namespace MazeGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _camera = new Camera();
+            
+            _levelManager = new LevelManager();
+            _level = _levelManager.CurrentLevel();
 
-            _levels = new Level[3];
-
-            _levels[0] = new Level(30, 30, 32, 7, 7, 30f, new Vector2(100, 100));
-            _levels[1] = new Level(45, 45, 32, 9, 9, 30f, new Vector2(100, 100));
-            _levels[2] = new Level(80, 45, 32, 11, 11, 30f, new Vector2(100, 100));
-
-            _level = _levels[_currentLevel];
-
-            _player = new Player();
-            _player.Position = _level.StartPosition;
+            _player = new Player(_level.StartPosition);
             _coinManager = _level.CoinManager;
 
             _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize, _coinManager);
@@ -80,17 +75,8 @@ namespace MazeGame
             _coinTexture = Content.Load<Texture2D>("coin");
             
 
-            Color[] data = new Color[32 * 32];
-            for (var i = 0; i < data.Length; i++)
-            {
-                data[i] = Color.White;
-            }
-
-            
-
-
-            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _backgroundTexture);
-            LoadLevel(_currentLevel);
+            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _backgroundTexture, _camera);
+            LoadLevel(_levelManager.CurrentLevel());
         }
 
         protected override void Update(GameTime gameTime)
@@ -104,12 +90,17 @@ namespace MazeGame
 
             _gameController.Update(keyboardState);
 
-            if (_level.Win.IsPlayerOnExit(_player.Position) && _coinManager.AllCollected())
+            int screenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            int screenHeight = _graphics.GraphicsDevice.Viewport.Height;
+
+            _camera.Follow(_player.Position, screenWidth, screenHeight);
+
+            if (_gameController.IsLevelComplete())
             {
-                if (_currentLevel < _levels.Length - 1)
+                if (!_levelManager.IsLastLevel())
                 {
-                    _currentLevel++;
-                    LoadLevel(_currentLevel);
+                    _levelManager.NextLevel();
+                    LoadLevel(_levelManager.CurrentLevel());
                 }
                 else
                 {
@@ -135,9 +126,9 @@ namespace MazeGame
             base.Draw(gameTime);
         }
 
-        public void LoadLevel(int index)
+        public void LoadLevel(Level level)
         {
-            _level = _levels[index];
+            _level = level;
             _player.Position = _level.StartPosition;
             _coinManager = _level.CoinManager;
 
@@ -147,7 +138,3 @@ namespace MazeGame
         }
     }
 }
-
-
-
-
