@@ -28,7 +28,7 @@ namespace Cipher_Trails.Models
             _mapHeight = mapHeight;
             _tileSize = tileSize;
 
-            _collectionRadius = _tileSize * 0.7f;
+            _collectionRadius = _tileSize * 1.7f;
 
             _random = new Random();
         }

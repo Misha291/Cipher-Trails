@@ -12,10 +12,13 @@ namespace Cipher_Trails.Models
     public class Player
     {
         public Vector2 Position;
-
-        public Player(Vector2 startPosition)
+        public const float DefaultSpeed = 500f;
+        private float _speed;
+        public float Speed { get { return _speed; } set { _speed = value; } }
+        public Player(Vector2 startPosition, float defaultSpeed)
         {
             Position = startPosition;
+            _speed = defaultSpeed;
         }
         public void Move(Vector2 direction)
         {

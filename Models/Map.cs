@@ -18,7 +18,6 @@ namespace Cipher_Trails.Models
             height = y;
             map = new int[y, x];
 
-            //создание стен вокруг 
             for (int dx = 0; dx < x; dx++)
             {
                 for (int dy = 0; dy < y; dy++)

@@ -31,6 +31,10 @@ namespace MazeGame
 
         private Camera _camera;
 
+        private Background _background;
+        private int _screenWidth;
+        private int _screenHeight;
+
         private int _tileSize;
 
         public Game1()
@@ -44,6 +48,8 @@ namespace MazeGame
             IsMouseVisible = true;
 
             _tileSize = 32;
+            _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
+            _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
         }
 
         protected override void Initialize()
@@ -54,7 +60,7 @@ namespace MazeGame
             _levelManager = new LevelManager();
             _level = _levelManager.CurrentLevel();
 
-            _player = new Player(_level.StartPosition);
+            _player = new Player(_level.StartPosition, Player.DefaultSpeed);
             _coinManager = _level.CoinManager;
 
             _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize, _coinManager);
@@ -73,9 +79,10 @@ namespace MazeGame
             _exitTexture = Content.Load<Texture2D>("exit");
             _backgroundTexture = Content.Load<Texture2D>("background");
             _coinTexture = Content.Load<Texture2D>("coin");
-            
 
-            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _backgroundTexture, _camera);
+            _background = new Background(_backgroundTexture, _screenWidth, _screenHeight);
+
+            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _camera, _background);
             LoadLevel(_levelManager.CurrentLevel());
         }
 
@@ -88,12 +95,12 @@ namespace MazeGame
 
             var keyboardState = Keyboard.GetState();
 
-            _gameController.Update(keyboardState);
+            _gameController.Update(keyboardState, gameTime);
 
-            int screenWidth = _graphics.GraphicsDevice.Viewport.Width;
-            int screenHeight = _graphics.GraphicsDevice.Viewport.Height;
-
-            _camera.Follow(_player.Position, screenWidth, screenHeight);
+            int screenWidthCamera = _graphics.GraphicsDevice.Viewport.Width;
+            int screenHeightCamera = _graphics.GraphicsDevice.Viewport.Height;
+            _camera.Follow(_player.Position, screenWidthCamera, screenHeightCamera,
+               _level.Map.width * _tileSize, _level.Map.height * _tileSize);
 
             if (_gameController.IsLevelComplete())
             {

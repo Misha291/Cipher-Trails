@@ -27,104 +27,43 @@ namespace Cipher_Trails.Controllers
             _tileSize = tileSize;
         }
 
-        public void Update(KeyboardState keyboardState)
+        public void Update(KeyboardState keyboardState, GameTime gametime)
         {
             if (_win.IsPlayerOnExit(_player.Position) && _coinManager.AllCollected())
             {
                 return;
             }
 
-            if (keyboardState.IsKeyDown(Keys.D))
-            {
-                CanMoveTo(new Vector2(10, 0));
-            }
+            float deltaTime = (float)gametime.ElapsedGameTime.TotalSeconds;
 
-            if (keyboardState.IsKeyDown(Keys.A))
-            {
-                CanMoveTo(new Vector2(-10, 0));
-            }
+            Vector2 direction = new Vector2(0, 0);
+            if (keyboardState.IsKeyDown(Keys.D)) direction.X += 1;
+            if (keyboardState.IsKeyDown(Keys.A)) direction.X -= 1;
+            if (keyboardState.IsKeyDown(Keys.W)) direction.Y -= 1;
+            if (keyboardState.IsKeyDown(Keys.S)) direction.Y += 1;
 
-            if (keyboardState.IsKeyDown(Keys.W))
-            {
-                CanMoveTo(new Vector2(0, -10));
-            }
+            if (direction != Vector2.Zero) direction.Normalize();
 
-            if (keyboardState.IsKeyDown(Keys.S))
-            {
-                CanMoveTo(new Vector2(0, 10));
-            }
+            Vector2 move = direction * (_player.Speed * deltaTime);
 
-            _coinManager.CheckCollisionsCoins(_player.Position);
+            CanMoveTo(move);
+
+            Vector2 playerCenter = _player.Position + new Vector2(_tileSize / 2, _tileSize / 2);
+            _coinManager.CheckCollisionsCoins(playerCenter);
         }
 
-        protected void CanMoveTo(Vector2 direction)
+        public void CanMoveTo(Vector2 direction)
         {
-            var nextPosition = _player.Position + direction;
+            var newPosition = _player.Position + direction;
+            var checkX = newPosition.X;
+            var checkY = newPosition.Y;
 
-            var checkX = nextPosition.X;
-            var checkY = nextPosition.Y;
-
-            if (direction.X > 0)
-            {
-                //вправо
-                var xRtopR = checkX + _tileSize;
-                var yRtopR = checkY;
-                var xRdownR = checkX;
-                var yRdownR = checkY + _tileSize;
-
-                if (!TwoCelisFree(xRtopR, yRtopR, xRdownR, yRdownR))
-                {
-                    return;
-                }
-                _player.Move(direction);
-            }
-
-            if (direction.Y > 0)
-            {
-                //вниз
-                var xRdownD = checkX;
-                var yRdownD = checkY + _tileSize;
-                var xLdownD = checkX;
-                var yLdownD = checkY + _tileSize;
-
-                if (!TwoCelisFree(xRdownD, yRdownD, xLdownD, yLdownD))
-                {
-                    return;
-                }
-                _player.Move(direction);
-            }
-
-            if (direction.X < 0)
-            {
-                //влево
-                var xLtopL = checkX;
-                var yLtopL = checkY;
-                var xLdownL = checkX;
-                var yLdownL = checkY + _tileSize;
-
-                if (!TwoCelisFree(xLtopL, yLtopL, xLdownL, yLdownL))
-                {
-                    return;
-                }
-                _player.Move(direction);
-            }
-
-            if (direction.Y < 0)
-            {
-                //вверх
-                var xLtopT = checkX;
-                var yLtopT = checkY;
-                var xRtopT = checkX + _tileSize;
-                var yRtopT = checkY;
-
-                if (!TwoCelisFree(xLtopT, yLtopT, xRtopT, yRtopT))
-                {
-                    return;
-                }
-                _player.Move(direction);
-            }
+            if (!IsCellFree(checkX, checkY)) return;
+            if (!IsCellFree(checkX + _tileSize, checkY)) return;
+            if (!IsCellFree(checkX, checkY + _tileSize)) return;
+            if (!IsCellFree(checkX + _tileSize, checkY + _tileSize)) return;
+            else _player.Move(direction);
         }
-
 
         protected bool IsCellFree(float checkX, float checkY) //метод проверки стена или нет 
         {
@@ -139,19 +78,6 @@ namespace Cipher_Trails.Controllers
             return false;
         }
 
-        protected bool TwoCelisFree(float x1, float y1, float x2, float y2) //метод проверки двух крайних точек игрока 
-        {
-            if (!IsCellFree(x1, y1))
-            {
-                return false;
-            }
-            if (!IsCellFree(x2, y2))
-            {
-                return false;
-            }
-            return true;
-        }
-
         public void UpdateLevelController(Level level)
         {
             _map = level.Map;
@@ -163,6 +89,7 @@ namespace Cipher_Trails.Controllers
         {
             return (_win.IsPlayerOnExit(_player.Position) && _coinManager.AllCollected());
         }
-
     }
 }
+
+
