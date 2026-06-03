@@ -47,7 +47,7 @@ namespace MazeGame
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
-            _tileSize = 32;
+            _tileSize = 64;
             _screenWidth = _graphics.GraphicsDevice.Viewport.Width;
             _screenHeight = _graphics.GraphicsDevice.Viewport.Height;
         }
@@ -63,7 +63,7 @@ namespace MazeGame
             _player = new Player(_level.StartPosition, Player.DefaultSpeed);
             _coinManager = _level.CoinManager;
 
-            _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize, _coinManager);
+            _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize , _coinManager);
 
             base.Initialize();
         }

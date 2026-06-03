@@ -51,7 +51,7 @@ namespace Cipher_Trails.Views
         }
 
 
-
+        
         public void Draw()
         {
             _spriteBatch.Begin();

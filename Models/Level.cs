@@ -21,14 +21,20 @@ namespace Cipher_Trails.Models
         public Vector2 StartPosition { get { return _startPosition; } }
         public CoinManager CoinManager { get { return _coinManager; } }
 
-        public Level(int mapWidth, int mapHeight, int tileSize, int exitPointX, int exitPointY, float winRadius, Vector2 startPosition)
+        public Level(int mapWidth, int mapHeight, int tileSize, int exitPointX, int exitPointY, float winRadius, Vector2 startPosition, float wallProbability)
         {
             _map = new Map(mapWidth, mapHeight);
             _win = new Win(tileSize, exitPointX, exitPointY, winRadius);
             _startPosition = startPosition;
             _coinManager = new CoinManager(mapWidth, mapHeight, tileSize);
+            _tileSize = tileSize;
 
-            _coinManager.GenerateCoins(3);
+            int startX = (int)(startPosition.X / _tileSize);
+            int startY = (int)(startPosition.Y / _tileSize);
+
+            _map.GenerateMapLevel(wallProbability, exitPointX, exitPointY, startX, startY);
+
+            _coinManager.GenerateCoins(5);
 
         }
     }

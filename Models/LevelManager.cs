@@ -16,9 +16,9 @@ namespace Cipher_Trails.Models
         {
             _levels = new Level[3];
 
-            _levels[0] = new Level(110, 110, 32, 7, 7, 80f, new Vector2(100, 100));
-            _levels[1] = new Level(130, 130, 32, 9, 9, 80f, new Vector2(100, 100));
-            _levels[2] = new Level(150, 150, 32, 11, 11, 80f, new Vector2(100, 100));
+            _levels[0] = new Level(110, 110, 64, 104, 104, 80f, new Vector2(128, 128), 0.03f);
+            _levels[1] = new Level(120, 120, 64, 114, 114, 80f, new Vector2(128, 128), 0.03f);
+            _levels[2] = new Level(130, 130, 64, 124, 124, 80f, new Vector2(128, 128), 0.03f);
 
             _currentLevel = 0;
         }

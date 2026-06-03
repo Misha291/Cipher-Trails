@@ -14,6 +14,7 @@ namespace Cipher_Trails.Models
         public Vector2 Position;
         public const float DefaultSpeed = 800f;
         private float _speed;
+        
         public float Speed { get { return _speed; } set { _speed = value; } }
         public Player(Vector2 startPosition, float defaultSpeed)
         {
