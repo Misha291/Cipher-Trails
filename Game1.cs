@@ -17,6 +17,7 @@ namespace MazeGame
         private Player _player;
         private Level _level;
         private CoinManager _coinManager;
+        private BulletManager _bulletManager;
 
         private GameController _gameController;
         private GameView _gameView;
@@ -26,6 +27,7 @@ namespace MazeGame
         private Texture2D _exitTexture;
         private Texture2D _backgroundTexture;
         private Texture2D _coinTexture;
+        private Texture2D _bulletTexture;
 
         private LevelManager _levelManager;
 
@@ -58,12 +60,20 @@ namespace MazeGame
             _camera = new Camera();
             
             _levelManager = new LevelManager();
+            _bulletManager = new BulletManager();
             _level = _levelManager.CurrentLevel();
 
             _player = new Player(_level.StartPosition, Player.DefaultSpeed);
             _coinManager = _level.CoinManager;
 
-            _gameController = new GameController(_player, _level.Map, _level.Win, _tileSize , _coinManager);
+            _gameController = new GameController(
+                _player, 
+                _level.Map,
+                _level.Win, 
+                _tileSize , 
+                _coinManager, 
+                _bulletManager
+                );
 
             base.Initialize();
         }
@@ -79,10 +89,24 @@ namespace MazeGame
             _exitTexture = Content.Load<Texture2D>("exit");
             _backgroundTexture = Content.Load<Texture2D>("background");
             _coinTexture = Content.Load<Texture2D>("coin");
+            _bulletTexture = Content.Load<Texture2D>("bullet");
 
             _background = new Background(_backgroundTexture, _screenWidth, _screenHeight);
 
-            _gameView = new GameView(_player, _level.Map, _spriteBatch, _tileSize, _playerTexture, _wallTexture, _exitTexture, _coinTexture, _camera, _background);
+            _gameView = new GameView(
+                _player, 
+                _level.Map, 
+                _spriteBatch, 
+                _tileSize, 
+                _playerTexture, 
+                _wallTexture, 
+                _exitTexture, 
+                _coinTexture, 
+                _bulletTexture,
+                _camera,
+                _background,
+                _bulletManager
+                );
             LoadLevel(_levelManager.CurrentLevel());
         }
 

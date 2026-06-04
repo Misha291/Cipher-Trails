@@ -15,16 +15,20 @@ namespace Cipher_Trails.Controllers
         private Map _map;
         private Win _win;
         private CoinManager _coinManager;
-
+        private BulletManager _bulletManager;
         private int _tileSize;
 
-        public GameController(Player player, Map map, Win win, int tileSize, CoinManager coinManager)
+        private Vector2 _lastDirection = new Vector2(1, 0);
+        private bool _previousSpaceState = false;
+
+        public GameController(Player player, Map map, Win win, int tileSize, CoinManager coinManager, BulletManager bulletManager)
         {
             _player = player;
             _map = map;
             _win = win;
             _coinManager = coinManager;
             _tileSize = tileSize;
+            _bulletManager = bulletManager;
         }
 
         public void Update(KeyboardState keyboardState, GameTime gametime)
@@ -49,6 +53,17 @@ namespace Cipher_Trails.Controllers
             CanMoveTo(move);
 
             Vector2 playerCenter = _player.Position + new Vector2(_tileSize / 2, _tileSize / 2);
+
+            if (direction != Vector2.Zero) _lastDirection = direction;
+
+            if (keyboardState.IsKeyDown(Keys.Space) && _previousSpaceState == false)
+            {
+                _bulletManager.BulletAdd(playerCenter, _lastDirection, 800f, 5, 5);
+            }
+            _previousSpaceState = keyboardState.IsKeyDown(Keys.Space);
+
+            _bulletManager.Update(deltaTime, _map.width * _tileSize, _map.height * _tileSize);
+            
             _coinManager.CheckCollisionsCoins(playerCenter);
         }
 
