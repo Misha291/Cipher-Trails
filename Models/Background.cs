@@ -21,12 +21,5 @@ namespace Cipher_Trails.Models
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
         }
-
-        public Rectangle GetSourceRectangle(Vector2 cameraPosition)
-        {
-            var rectangle = new Rectangle((int)(-cameraPosition.X), (int)(-cameraPosition.Y), _screenWidth, _screenHeight);
-            return rectangle;
-        }
-
     } 
 }

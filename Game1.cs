@@ -18,6 +18,7 @@ namespace MazeGame
         private Level _level;
         private CoinManager _coinManager;
         private BulletManager _bulletManager;
+        private EnemyManager _enemyManager;
 
         private GameController _gameController;
         private GameView _gameView;
@@ -28,6 +29,7 @@ namespace MazeGame
         private Texture2D _backgroundTexture;
         private Texture2D _coinTexture;
         private Texture2D _bulletTexture;
+        private Texture2D _enemyTexture;
 
         private LevelManager _levelManager;
 
@@ -61,6 +63,7 @@ namespace MazeGame
             
             _levelManager = new LevelManager();
             _bulletManager = new BulletManager();
+            _enemyManager = new EnemyManager();
             _level = _levelManager.CurrentLevel();
 
             _player = new Player(_level.StartPosition, Player.DefaultSpeed);
@@ -72,7 +75,8 @@ namespace MazeGame
                 _level.Win, 
                 _tileSize , 
                 _coinManager, 
-                _bulletManager
+                _bulletManager,
+                _enemyManager
                 );
 
             base.Initialize();
@@ -90,6 +94,8 @@ namespace MazeGame
             _backgroundTexture = Content.Load<Texture2D>("background");
             _coinTexture = Content.Load<Texture2D>("coin");
             _bulletTexture = Content.Load<Texture2D>("bullet");
+            _enemyTexture = Content.Load<Texture2D>("enemy");
+
 
             _background = new Background(_backgroundTexture, _screenWidth, _screenHeight);
 
@@ -103,9 +109,11 @@ namespace MazeGame
                 _exitTexture, 
                 _coinTexture, 
                 _bulletTexture,
+                _enemyTexture,
                 _camera,
                 _background,
-                _bulletManager
+                _bulletManager,
+                _enemyManager
                 );
             LoadLevel(_levelManager.CurrentLevel());
         }

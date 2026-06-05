@@ -41,5 +41,10 @@ namespace Cipher_Trails.Models
                 }
             }
         }
+
+        public void ClearBullets()
+        {
+            _bullets.Clear();
+        }
     }
 }

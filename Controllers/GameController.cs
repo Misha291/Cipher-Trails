@@ -16,12 +16,21 @@ namespace Cipher_Trails.Controllers
         private Win _win;
         private CoinManager _coinManager;
         private BulletManager _bulletManager;
+        private EnemyManager _enemyManager;
         private int _tileSize;
 
         private Vector2 _lastDirection = new Vector2(1, 0);
         private bool _previousSpaceState = false;
 
-        public GameController(Player player, Map map, Win win, int tileSize, CoinManager coinManager, BulletManager bulletManager)
+        public GameController(
+            Player player, 
+            Map map, 
+            Win win, 
+            int tileSize, 
+            CoinManager coinManager, 
+            BulletManager bulletManager, 
+            EnemyManager enemyManager
+            )
         {
             _player = player;
             _map = map;
@@ -29,6 +38,7 @@ namespace Cipher_Trails.Controllers
             _coinManager = coinManager;
             _tileSize = tileSize;
             _bulletManager = bulletManager;
+            _enemyManager = enemyManager;
         }
 
         public void Update(KeyboardState keyboardState, GameTime gametime)
@@ -63,6 +73,8 @@ namespace Cipher_Trails.Controllers
             _previousSpaceState = keyboardState.IsKeyDown(Keys.Space);
 
             _bulletManager.Update(deltaTime, _map.width * _tileSize, _map.height * _tileSize);
+
+            _enemyManager.Update(deltaTime, playerCenter, _map);
             
             _coinManager.CheckCollisionsCoins(playerCenter);
         }
@@ -95,9 +107,16 @@ namespace Cipher_Trails.Controllers
 
         public void UpdateLevelController(Level level)
         {
+            Vector2 playerCenter = _player.Position + new Vector2(_tileSize / 2, _tileSize / 2);
+
             _map = level.Map;
             _win = level.Win;
             _coinManager = level.CoinManager;
+
+            _bulletManager.ClearBullets();
+
+            _enemyManager.ClearEnemies();
+            _enemyManager.SpawnRandomEnemies(5, _map, _tileSize, playerCenter, 150f, 64, 64);
         }
 
         public bool IsLevelComplete()

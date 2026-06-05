@@ -17,6 +17,7 @@ namespace Cipher_Trails.Views
         private Vector2 _exitPosition;
         private CoinManager _coinManeger;
         private BulletManager _bulletManeger;
+        private EnemyManager _enemyManeger;
 
         private SpriteBatch _spriteBatch;
 
@@ -25,24 +26,42 @@ namespace Cipher_Trails.Views
         private Texture2D _exitTexture;
         private Texture2D _coinTexture;
         private Texture2D _bulletTexture;
+        private Texture2D _enemyTexture;
 
         private int _tileSize;
 
         private int _desiredPlayerWidth = 64;
         private int _desiredPlayerHeight = 64;
+        private int _desiredEnemyWidth = 64;
+        private int _desiredEnemyHeight = 64;
         private int _desiredWallWidth = 64;
         private int _desiredWallHeight = 64;
         private int _desiredCoinWidth = 64; 
         private int _desiredCoinHeight = 64;
-        private int _desiredExitWidth = 64;
-        private int _desiredExitHeight = 64;
+        private int _desiredExitWidth = 180;
+        private int _desiredExitHeight = 180;
         private int _desiredBulletWidth = 24;
         private int _desiredBulletHeight = 16;
 
         private Camera _camera;
         private Background _background;
 
-        public GameView(Player player, Map map, SpriteBatch spriteBatch, int tileSize, Texture2D playerTexture, Texture2D wallTexture, Texture2D exitTexture, Texture2D coinTexture, Texture2D bulletTexture, Camera camera, Background background, BulletManager bulletManager)
+        public GameView(
+            Player player, 
+            Map map, 
+            SpriteBatch spriteBatch, 
+            int tileSize, 
+            Texture2D playerTexture, 
+            Texture2D wallTexture, 
+            Texture2D exitTexture, 
+            Texture2D coinTexture, 
+            Texture2D bulletTexture, 
+            Texture2D enemyTexture,
+            Camera camera, 
+            Background background, 
+            BulletManager bulletManager,
+            EnemyManager enemyManager
+            )
         {
             _player = player;  
             _map = map;
@@ -53,9 +72,11 @@ namespace Cipher_Trails.Views
             _exitTexture = exitTexture;
             _coinTexture = coinTexture;
             _bulletTexture = bulletTexture;
+            _enemyTexture = enemyTexture;
             _camera = camera;
             _background = background;
             _bulletManeger = bulletManager;
+            _enemyManeger = enemyManager;
         }
 
         public void UpdateLevelView(Level level)
@@ -142,7 +163,23 @@ namespace Cipher_Trails.Views
                     );
                 _spriteBatch.Draw(_bulletTexture, bulletRectangle, Color.White);
             }
-            _spriteBatch.End(); 
+
+            foreach (var enemy in _enemyManeger.Enemies)
+            {
+                Vector2 enemyTopLeft = enemy.Position - new Vector2(_desiredEnemyWidth / 2, _desiredEnemyHeight / 2);
+
+                Rectangle enemyRectangle = new Rectangle(
+                    (int)(enemyTopLeft.X - _camera.CameraPosition.X),
+                    (int)(enemyTopLeft.Y - _camera.CameraPosition.Y),
+                    _desiredEnemyWidth,
+                    _desiredEnemyHeight
+                    );
+                _spriteBatch.Draw(_enemyTexture, enemyRectangle, Color.White);
+            }
+
+            _spriteBatch.End();
+
+            
         }
     }
 }
