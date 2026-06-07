@@ -9,7 +9,7 @@ namespace Cipher_Trails.Models
 {
     public class Enemy
     {
-        public const float DefaultSpeed = 200f;
+        public const float DefaultSpeed = 300f;
         public int Width { get; }
         public int Height { get; }
         public Vector2 Position { get; set; }

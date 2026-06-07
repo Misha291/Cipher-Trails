@@ -75,7 +75,36 @@ namespace Cipher_Trails.Controllers
             _bulletManager.Update(deltaTime, _map.width * _tileSize, _map.height * _tileSize);
 
             _enemyManager.Update(deltaTime, playerCenter, _map);
-            
+
+            for (int i = _bulletManager.Bullets.Count - 1; i >= 0; i--)
+            {
+                var bullet = _bulletManager.Bullets[i];
+                Rectangle bulletRect = new Rectangle(
+                    (int)(bullet.PositionBullet.X - bullet.Width / 2),
+                    (int)(bullet.PositionBullet.Y - bullet.Height / 2),
+                    bullet.Width,
+                    bullet.Height
+                );
+
+                for (int j = _enemyManager.Enemies.Count - 1; j >= 0; j--)
+                {
+                    var enemy = _enemyManager.Enemies[j];
+                    Rectangle enemyRect = new Rectangle(
+                        (int)(enemy.Position.X - enemy.Width / 2),
+                        (int)(enemy.Position.Y - enemy.Height / 2),
+                        enemy.Width,
+                        enemy.Height
+                    );
+
+                    if (bulletRect.Intersects(enemyRect))
+                    {
+                        _bulletManager.Bullets.RemoveAt(i);  
+                        _enemyManager.Enemies.RemoveAt(j);  
+                        break; 
+                    }
+                }
+            }
+
             _coinManager.CheckCollisionsCoins(playerCenter);
         }
 
@@ -92,7 +121,7 @@ namespace Cipher_Trails.Controllers
             else _player.Move(direction);
         }
 
-        protected bool IsCellFree(float checkX, float checkY) //метод проверки стена или нет 
+        protected bool IsCellFree(float checkX, float checkY) 
         {
             int nextX = (int)(checkX / _tileSize);
             int nextY = (int)(checkY / _tileSize);

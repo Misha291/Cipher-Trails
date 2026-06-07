@@ -79,5 +79,17 @@ namespace Cipher_Trails.Models
 
             }
         }
+        public int GetCollectedCount()
+        {
+            int count = 0;
+            foreach (var coin in _coinsList)
+            {
+                if (coin.IsCollected)
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
     }
 }

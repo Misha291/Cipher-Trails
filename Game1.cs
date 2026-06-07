@@ -12,8 +12,8 @@ namespace MazeGame
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics; // объект который настраивает графику игры
-        private SpriteBatch _spriteBatch; // рисует текстуры (картинки) - мы рисуем каждый кадр 
+        private GraphicsDeviceManager _graphics; 
+        private SpriteBatch _spriteBatch; 
         private Player _player;
         private Level _level;
         private CoinManager _coinManager;
@@ -40,6 +40,8 @@ namespace MazeGame
         private int _screenHeight;
 
         private int _tileSize;
+
+        private SpriteFont _font;
 
         public Game1()
         {
